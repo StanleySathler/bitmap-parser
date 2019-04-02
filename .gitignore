@@ -51,8 +51,10 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# Editor files
-.vscode
+# Personal editor files
+.vscode/ipch
+.vscode/launch.json
+.vscode/tasks.json
 
 # Test file
 test.*
