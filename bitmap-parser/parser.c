@@ -16,12 +16,12 @@ typedef struct {
 	unsigned int biHeight;
 	unsigned int biBitCount;
 	unsigned int biSizeImage;
-	char* content;
+	unsigned char* content;
 } BitmapImage;
 
 
 void printContent(BitmapImage *pImage);
-void printDetails(BitmapImage *pImage);
+void printFooter(BitmapImage *pImage);
 void parse(BitmapImage *pImage, FILE *file);
 int readBytes(FILE *file, unsigned int bytes);
 
@@ -40,36 +40,43 @@ int main(int argc, char **argv)
 	parse(&bitmapImage, bitmapFile);
 	fclose(bitmapFile);
 
-	printDetails(&bitmapImage);
+	printContent(&bitmapImage);
+	printFooter(&bitmapImage);
 	return 0;
 }
 
 
-void printDetails(BitmapImage *pImage)
+void printContent(BitmapImage *pImage)
 {
-	putchar('\n');
-	puts("Content:");
-	printContent(pImage);
-	putchar('\n');
-	puts("--------------------------------------");
+	unsigned int bytesPerPixel = (pImage->biBitCount / 8);
+
+	puts("Content: ...........................");
+
+	for (unsigned int i = 1; i <= pImage->biSizeImage; i++) {
+		if (((i - 1) % bytesPerPixel) == 0)
+			putchar('(');
+
+		printf("%02X ", pImage->content[i - 1]);
+
+		if ((i % bytesPerPixel) == 0) {
+			putchar('\b');
+			putchar(')');
+		}
+
+		if ((i % pImage->biWidth) == 0)
+			putchar('\n');
+	}
+}
+
+
+void printFooter(BitmapImage *pImage)
+{
 	printf("File size: ....................... %uB \n", pImage->bfSize);
 	printf("Header length: ................... %uB \n", pImage->bfOffBits);
 	printf("Width: ........................... %upx \n", pImage->biWidth);
 	printf("Height: .......................... %upx \n", pImage->biHeight);
 	printf("Color depth: ..................... %ub \n", pImage->biBitCount);
 	printf("Content length: .................. %uB \n", pImage->biSizeImage);
-	puts("--------------------------------------");
-}
-
-
-void printContent(BitmapImage *pImage)
-{
-	for (unsigned int i = 0; i < pImage->biSizeImage; i++) {
-		printf("%d ", pImage->content[i]);
-
-		if ((i % pImage->biWidth) == 0)
-			putchar('\n');
-	}
 }
 
 
@@ -104,7 +111,7 @@ void parse(BitmapImage *pImage, FILE *file)
 
 		// content
 		else if (cursor == (pImage->bfOffBits + 1)) {
-			pImage->content = (char*) malloc(pImage->biSizeImage);
+			pImage->content = (unsigned char*) malloc(pImage->biSizeImage);
 			pImage->content[0] = currentByte;
 
 			for (unsigned int i = 1; i < pImage->biSizeImage; i++) {
