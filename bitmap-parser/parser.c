@@ -63,7 +63,7 @@ void printContent(BitmapImage *pImage)
 			putchar(')');
 		}
 
-		if ((i % pImage->biWidth) == 0)
+		if ((i % (bytesPerPixel * pImage->biWidth)) == 0)
 			putchar('\n');
 	}
 }
