@@ -26,16 +26,16 @@ int main(int argc, char **argv)
 	bitmap_parse(&bitmapImage, bitmapFile);
 	fclose(bitmapFile);
 
+	putchar('\n');
 	print_content(&bitmapImage);
 	print_footer(&bitmapImage);
+	putchar('\n');
 	return 0;
 }
 
 void print_content(BitmapImage *pImage)
 {
 	unsigned int bytesPerPixel = (pImage->biBitCount / 8);
-
-	puts("Content: ...........................");
 
 	for (unsigned int i = 1; i <= pImage->biSizeImage; i++) {
 		if (((i - 1) % bytesPerPixel) == 0)
@@ -55,6 +55,7 @@ void print_content(BitmapImage *pImage)
 
 void print_footer(BitmapImage *pImage)
 {
+	puts("----------------------------------");
 	printf("File size: ....................... %uB \n", pImage->bfSize);
 	printf("Header length: ................... %uB \n", pImage->bfOffBits);
 	printf("Width: ........................... %upx \n", pImage->biWidth);
