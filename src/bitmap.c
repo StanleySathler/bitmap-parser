@@ -54,3 +54,13 @@ void bitmap_parse(BitmapImage *pImage, FILE *file)
 		}
 	}
 }
+
+void read_next_color(BitmapImage *image, char* color, unsigned short int content_index)
+{
+	unsigned short int bytes_per_pixel = (image->biSizeImage / 8);
+
+	for (unsigned short int i = bytes_per_pixel, j = 0; i > 0; i--, j++) {
+		printf("%d: 0x%02X \n", (content_index + i - 1), image->content[content_index + i - 1]);
+		color[j] = image->content[content_index + i - 1];
+	}
+}

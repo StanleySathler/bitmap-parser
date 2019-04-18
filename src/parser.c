@@ -1,10 +1,7 @@
-/*
- * Command: gcc -std=c99 -o parser parser.c bitmap.c
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "bitmap.h"
+#include "util.h"
 #include "parser.h"
 
 #define COLORS_PER_LINE 3
@@ -31,29 +28,35 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-void print_content(BitmapImage *pImage)
+void print_content(BitmapImage *image)
 {
-	unsigned int bytesPerPixel = (pImage->biBitCount / 8);
+	unsigned int bytes_per_pixel = (image->biBitCount / 8);
+	unsigned int bytes_per_row = (bytes_per_pixel * image->biWidth);
 
-	for (unsigned int i = 1; i <= pImage->biSizeImage; i++) {
-		if (((i - 1) % bytesPerPixel) == 0)
-			putchar('(');
+	for (unsigned int i = 0; i < image->biSizeImage; i += bytes_per_pixel) {
 
-		printf("%02X ", pImage->content[i - 1]);
+		// if already printed all colors for current line
+		if (is_multiple_of(bytes_per_row, i))
+			putchar('\n');
 
-		if ((i % bytesPerPixel) == 0) {
-			putchar('\b');
-			putchar(')');
+		putchar('(');
+
+		for (short int j = (bytes_per_pixel - 1); j >= 0; j--) {
+			if (j < (bytes_per_pixel - 1))
+				putchar(' ');
+
+			printf("%02X", image->content[i + j]);
 		}
 
-		if ((i % (bytesPerPixel * pImage->biWidth)) == 0)
-			putchar('\n');
+		putchar(')');
 	}
+
+	putchar('\n');
 }
 
 void print_footer(BitmapImage *pImage)
 {
-	puts("----------------------------------");
+	putchar('\n');
 	printf("File size: ....................... %uB \n", pImage->bfSize);
 	printf("Header length: ................... %uB \n", pImage->bfOffBits);
 	printf("Width: ........................... %upx \n", pImage->biWidth);

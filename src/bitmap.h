@@ -16,5 +16,6 @@
 	} BitmapImage;
 
 	void bitmap_parse(BitmapImage *pImage, FILE *file);
+	void read_next_color(BitmapImage *image, char* color, unsigned short int content_index);
 	int read_next_bytes(FILE *file, unsigned int bytes);
 #endif /* __BITMAP_H__ */
