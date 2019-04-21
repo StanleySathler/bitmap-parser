@@ -33,11 +33,16 @@ void print_content(BitmapImage *image)
 	unsigned int bytes_per_pixel = (image->biBitCount / 8);
 	unsigned int bytes_per_row = (bytes_per_pixel * image->biWidth);
 
-	for (unsigned int i = 0; i < image->biSizeImage; i += bytes_per_pixel) {
-
-		// if already printed all colors for current line
-		if (is_multiple_of(bytes_per_row, i))
+	for (
+		unsigned int cursor = 0, line = 1;
+		cursor < image->biSizeImage;
+		cursor += bytes_per_pixel
+	) {
+		if (cursor == (bytes_per_row * line) + ((line - 1) * bytes_per_pixel)) {
+			line++;
 			putchar('\n');
+			continue;
+		}
 
 		putchar('(');
 
@@ -45,7 +50,7 @@ void print_content(BitmapImage *image)
 			if (j < (bytes_per_pixel - 1))
 				putchar(' ');
 
-			printf("%02X", image->content[i + j]);
+			printf("%02X", image->content[cursor + j]);
 		}
 
 		putchar(')');
