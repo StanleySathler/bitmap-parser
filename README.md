@@ -19,4 +19,5 @@ This program can easily fail in any other platform rather than the Ubuntu 18.04 
 **Content**
 - [x] Print color of each pixel (grouped by `()`)
 - [x] Print bytes in the right order (considering _little-endian_)
+- [ ] Remove new line bytes from printed output
 - [ ] Print colors in the right order (considering _top-down / bottom-up_) 
