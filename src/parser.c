@@ -32,7 +32,30 @@ void print_content(BitmapImage *image)
 {
 	unsigned int bytes_per_pixel = (image->biBitCount / 8);
 	unsigned int bytes_per_row = (bytes_per_pixel * image->biWidth);
+	unsigned int curr_index = 0;
 
+	for (int line = 0; line < image->biHeight; line++) {
+		for (int column = 0; column <= image->biWidth; column++) {
+			if (column == image->biWidth) {
+				curr_index += bytes_per_pixel;
+				continue;
+			}
+
+			putchar('(');
+			for (int column_item_index = (bytes_per_pixel - 1); column_item_index >= 0; column_item_index--) {
+				printf("%02X", image->content[curr_index + column_item_index]);
+
+				if (column_item_index > 0)
+					putchar(' ');
+			}
+			putchar(')');
+
+			curr_index += bytes_per_pixel;
+		}
+
+		putchar('\n');
+	}
+	/*
 	for (
 		unsigned int cursor = 0, line = 1;
 		cursor < image->biSizeImage;
@@ -55,6 +78,7 @@ void print_content(BitmapImage *image)
 
 		putchar(')');
 	}
+	*/
 
 	putchar('\n');
 }
