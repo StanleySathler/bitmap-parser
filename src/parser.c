@@ -4,7 +4,6 @@
 #include "util.h"
 #include "parser.h"
 
-#define COLORS_PER_LINE 3
 #define ERROR_MISSING_FILENAME 15
 
 int main(int argc, char **argv)
@@ -34,27 +33,73 @@ void print_content(BitmapImage *image)
 	unsigned int bytes_per_row = (bytes_per_pixel * image->biWidth);
 	unsigned int curr_index = 0;
 
-	for (unsigned int line = 0; line < image->biHeight; line++) {
-		for (unsigned int column = 0; column <= image->biWidth; column++) {
-			if (column == image->biWidth) {
-				curr_index += bytes_per_pixel;
-				continue;
-			}
+	/* First group of bytes */
+	putchar('(');
+	printf("%02X", image->content[26]);
+	printf("%02X", image->content[25]);
+	printf("%02X", image->content[24]);
+	putchar(')');
 
-			putchar('(');
-			for (int short column_item_index = (bytes_per_pixel - 1); column_item_index >= 0; column_item_index--) {
-				printf("%02X", image->content[curr_index + column_item_index]);
+	/* Second group of bytes */
+	putchar('(');
+	printf("%02X", image->content[29]);
+	printf("%02X", image->content[28]);
+	printf("%02X", image->content[27]);
+	putchar(')');
 
-				if (column_item_index > 0)
-					putchar(' ');
-			}
-			putchar(')');
+	/* Third group of bytes */
+	putchar('(');
+	printf("%02X", image->content[32]);
+	printf("%02X", image->content[31]);
+	printf("%02X", image->content[30]);
+	putchar(')');
 
-			curr_index += bytes_per_pixel;
-		}
+	/* Forth group of bytes */
+	/* Break-line bytes - should be ignored */
+	putchar('\n');
 
-		putchar('\n');
-	}
+	/* Fifth group of bytes */
+	putchar('(');
+	printf("%02X", image->content[14]);
+	printf("%02X", image->content[13]);
+	printf("%02X", image->content[12]);
+	putchar(')');
+
+	/* Sixth group of bytes */
+	putchar('(');
+	printf("%02X", image->content[17]);
+	printf("%02X", image->content[16]);
+	printf("%02X", image->content[15]);
+	putchar(')');
+
+	/* Seventh group of bytes */
+	putchar('(');
+	printf("%02X", image->content[20]);
+	printf("%02X", image->content[19]);
+	printf("%02X", image->content[18]);
+	putchar(')');
+
+	// for (int line = (image->biHeight - 1); line >= 0; line--) {
+	// 	for (unsigned int column = 0; column <= image->biWidth; column++) {
+	// 		if (column == image->biWidth) {
+	// 			curr_index += bytes_per_pixel;
+	// 			continue;
+	// 		}
+
+	// 		putchar('(');
+	// 		for (int short column_item_index = (bytes_per_pixel - 1); column_item_index >= 0; column_item_index--) {
+	// 			printf("%02X", image->content[curr_index + column_item_index]);
+
+	// 			if (column_item_index > 0)
+	// 				putchar(' ');
+	// 		}
+	// 		putchar(')');
+
+	// 		curr_index += bytes_per_pixel;
+	// 	}
+
+	// 	putchar('\n');
+	// }
 
 	putchar('\n');
 }
