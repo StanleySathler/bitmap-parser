@@ -4,7 +4,6 @@
 #include "util.h"
 #include "parser.h"
 
-#define COLORS_PER_LINE 3
 #define ERROR_MISSING_FILENAME 15
 
 int main(int argc, char **argv)
@@ -30,33 +29,26 @@ int main(int argc, char **argv)
 
 void print_content(BitmapImage *image)
 {
-	unsigned int bytes_per_pixel = (image->biBitCount / 8);
-	unsigned int bytes_per_row = (bytes_per_pixel * image->biWidth);
-	unsigned int curr_index = 0;
+	int bytes_per_pixel = (image->biBitCount / 8);
+	int bytes_per_row = (bytes_per_pixel * image->biWidth);
+	int all_bytes_per_row = (bytes_per_row + bytes_per_pixel); // null break line byte
 
-	for (unsigned int line = 0; line < image->biHeight; line++) {
-		for (unsigned int column = 0; column <= image->biWidth; column++) {
-			if (column == image->biWidth) {
-				curr_index += bytes_per_pixel;
-				continue;
-			}
-
+	for (int row = 0; row < image->biHeight; row++)
+	{
+		for (
+			int	i = (image->biSizeImage - all_bytes_per_row * (row + 1));
+			i < (image->biSizeImage - (all_bytes_per_row * row) - bytes_per_pixel);
+			i += bytes_per_pixel
+		)
+		{
 			putchar('(');
-			for (int short column_item_index = (bytes_per_pixel - 1); column_item_index >= 0; column_item_index--) {
-				printf("%02X", image->content[curr_index + column_item_index]);
-
-				if (column_item_index > 0)
-					putchar(' ');
-			}
+			for (int j = (i + (bytes_per_pixel - 1)); j >= i; j--)
+				printf("%02X", image->content[j]);
 			putchar(')');
-
-			curr_index += bytes_per_pixel;
 		}
 
 		putchar('\n');
 	}
-
-	putchar('\n');
 }
 
 void print_footer(BitmapImage *pImage)
