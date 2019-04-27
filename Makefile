@@ -16,4 +16,4 @@ compile: $(SRC_ENTRY) $(DEPENDENCIES)
 # $ make exec - Executes the final binary file
 ##
 exec: $(BIN_OUTPUT)
-	$(BIN_OUTPUT) /home/stanley/Desktop/x.bmp
+	$(BIN_OUTPUT) ./test/x.bmp
