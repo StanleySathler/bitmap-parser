@@ -17,3 +17,9 @@ compile: $(SRC_ENTRY) $(DEPENDENCIES)
 ##
 exec: $(BIN_OUTPUT)
 	$(BIN_OUTPUT) ./test/x.bmp
+
+compile_tests: test/main.o src/bitmap.o
+	gcc -std=c99 -o bin/main.bin test/main.o src/bitmap.o
+
+run_tests: test/main.o src/bitmap.o
+	bin/main.bin test/x.bmp

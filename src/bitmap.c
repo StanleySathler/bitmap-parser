@@ -2,7 +2,11 @@
 #include <stdlib.h>
 #include "bitmap.h"
 
-int read_next_bytes(FILE *file, unsigned int bytes)
+/**
+ * @brief Read next N bytes from the given image.
+ */
+int
+read_next_bytes(FILE *file, unsigned int bytes)
 {
 	int total = 0;
 
@@ -13,7 +17,11 @@ int read_next_bytes(FILE *file, unsigned int bytes)
 	return total;
 }
 
-void bitmap_parse(BitmapImage *pImage, FILE *file)
+/**
+ * @brief Parse the given image into a BitmapImage struct.
+ */
+void
+bmp_parse_file(BitmapImage *pImage, FILE *file)
 {
 	int currentByte;
 	long int cursor;
@@ -52,15 +60,5 @@ void bitmap_parse(BitmapImage *pImage, FILE *file)
 				pImage->content[i] = byte;
 			}
 		}
-	}
-}
-
-void read_next_color(BitmapImage *image, char* color, unsigned short int content_index)
-{
-	unsigned short int bytes_per_pixel = (image->biSizeImage / 8);
-
-	for (unsigned short int i = bytes_per_pixel, j = 0; i > 0; i--, j++) {
-		printf("%d: 0x%02X \n", (content_index + i - 1), image->content[content_index + i - 1]);
-		color[j] = image->content[content_index + i - 1];
 	}
 }
